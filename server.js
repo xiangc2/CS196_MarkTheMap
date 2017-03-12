@@ -119,6 +119,25 @@ router.route('/markers/:marker_id')
             res.json({ message: 'Marker: ' + title + ' has been deleted'});
         });
     });
+
+
+// on routes that end in /markers/:marker_title
+// ----------------------------------------------------
+
+router.route('/markers/:marker_title')
+    .get(function(req, res) {
+        console.log(req.params.marker_title)
+
+        Marker.findByTitle(req.params.marker_title, function(err, marker) {
+            console.log(req.params.marker_title)
+
+            if (err)
+                res.send(err);
+            res.json(marker);
+        });
+});
+
+
 //-------------------------------------------------------------------
 //REGISTER ROUTES
 
