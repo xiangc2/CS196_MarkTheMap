@@ -11,4 +11,8 @@ var MarkerSchema = new Schema({
     times_flagged: Number
 })
 
+MarkerSchema.statics.findByTitle = function(title, object){
+	return this.find({ title : new RegExp(title, 'i')}, object);
+};
+
 module.exports = mongoose.model('Marker',MarkerSchema);

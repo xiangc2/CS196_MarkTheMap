@@ -73,11 +73,24 @@ router.route('/markers/:marker_id')
 
     //get marker with a specific id
     .get(function(req,res){
-    	Marker.findById(req.params.marker_id, function(err, marker){
-             if(err)
-             	res.send(err);
-             res.json(marker);
-    	});
+        if (req.params.marker_id.match(/^[0-9a-fA-F]{24}$/)) {//check if the 'marker_id' is a valid objectid in schema
+            Marker.findById(req.params.marker_id, function(err, marker) {
+            if (err)
+                res.send(err);
+
+            res.json(marker);
+            });
+        }
+
+        //if 'marker_id' is not a valid objectid, check which parameter it may belong to. need more work here
+        else if (typeof req.params.marker_id == 'string'){
+            Marker.findByTitle(req.params.marker_id, function(err, marker) {
+            if (err)
+                res.send(err);
+
+            res.json(marker);
+            });
+        }
     })
 
     .put(function(req, res) {
@@ -119,23 +132,6 @@ router.route('/markers/:marker_id')
             res.json({ message: 'Marker: ' + title + ' has been deleted'});
         });
     });
-
-
-// on routes that end in /markers/:marker_title
-// ----------------------------------------------------
-
-router.route('/markers/:marker_title')
-    .get(function(req, res) {
-        console.log(req.params.marker_title)
-
-        Marker.findByTitle(req.params.marker_title, function(err, marker) {
-            console.log(req.params.marker_title)
-
-            if (err)
-                res.send(err);
-            res.json(marker);
-        });
-});
 
 
 //-------------------------------------------------------------------
